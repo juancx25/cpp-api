@@ -21,25 +21,14 @@ namespace author {
             };
             NLOHMANN_DEFINE_TYPE_INTRUSIVE(Author, id, name, picture)
 
-            void setId(std::string id){
-                this->id = id;
-            }
-            void setName(std::string name){
-                this->name = name;
-            }
-            void setPicture(std::string picture){
-                this->picture = picture;
-            }
-
-            std::string getId(){
-                return this->id;
-            }
-            std::string getName(){
-                return this->name;
-            }
-            std::string getPicture(){
-                return this->picture;
-            }
+            // SETTERS
+            void setId(std::string id){ this->id = id; }
+            void setName(std::string name){ this->name = name; }
+            void setPicture(std::string picture){ this->picture = picture; }
+            // GETTERS
+            std::string getId(){ return this->id; }
+            std::string getName(){ return this->name; }
+            std::string getPicture(){ return this->picture; }
     };
 }
 

@@ -12,7 +12,11 @@ int main(){
 
     CROW_ROUTE(app, "/quotes/<string>").methods(crow::HTTPMethod::GET)
     ([&](std::string id){
-        return response::toJson(quoteService.getQuoteById(id));
+        return response::toJson(*(quoteService.getQuoteById(id)));
+    });
+    CROW_ROUTE(app, "/quotes").methods(crow::HTTPMethod::GET)
+    ([&](){
+        return response::listToJson(quoteService.getAllQuotes());
     });
     CROW_ROUTE(app, "/authors/<string>").methods(crow::HTTPMethod::GET)
     ([&](std::string id){

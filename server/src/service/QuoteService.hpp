@@ -1,16 +1,17 @@
 #include "../common/entity/Quote.hpp"
+#include "../repository/QuoteRepository.hpp"
 
 class QuoteService{
     private:
-        // Repository goes here
+        QuoteRepository* quoteRepository;
     public:
         QuoteService(){
-            // Init
+            this->quoteRepository = new QuoteRepository();
         }
-        quote::Quote getQuoteById(std::string id){
-            quote::Quote q;
-            q.id = id;
-            q.text = "Lorem ipsum dolor sit amet";
-            return q;
+        quote::Quote* getQuoteById(std::string id){
+            return quoteRepository->findById(id);
+        }
+        std::list<quote::Quote*> getAllQuotes(){
+            return quoteRepository->findAll();
         }
 };
