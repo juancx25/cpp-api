@@ -10,6 +10,7 @@ template <typename T> class BaseRepository {
     protected:
         DbConnection* connection;
         std::string tableName;
+        std::map<const char*, void (T::*)(std::string)> fieldMap;
     public:
         BaseRepository(){
             this->connection = new DbConnection(consts::DB_PATH);
@@ -19,12 +20,12 @@ template <typename T> class BaseRepository {
             this->connection = new DbConnection(consts::DB_PATH);
         }
 
-        virtual T* parseResponse(utils::SqlResponse*, uint32_t offset = 0) = 0;
+        virtual T* parseResponse(utils::SqlResponse*, uint32_t row = 0) = 0;
         
         T* findById(std::string id){
             std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");
             this->connection->execute(sqlQuery.c_str());
-            return this->parseResponse(this->connection->responseData, this->connection->responseData->numCols);
+            return this->parseResponse(this->connection->responseData);
         }
 
         std::list<T*> findAll(){
@@ -32,7 +33,7 @@ template <typename T> class BaseRepository {
             this->connection->execute(sqlQuery.c_str());
             std::list<T*> all;
             for (int i = 0; i<this->connection->responseData->numRows; i++){
-                all.push_back(this->parseResponse(this->connection->responseData, this->connection->responseData->numCols * (i+1)));
+                all.push_back(this->parseResponse(this->connection->responseData, i));
             }
             return all;
         }

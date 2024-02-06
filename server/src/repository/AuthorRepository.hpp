@@ -12,23 +12,20 @@ class AuthorRepository: public BaseRepository<author::Author> {
         AuthorRepository(): BaseRepository<author::Author>(){
             this->tableName = std::string("author");
         }
-        //TODO: Find a better way of doing this
-        author::Author* parseResponse(utils::SqlResponse* response, uint32_t offset){
+
+        author::Author* parseResponse(utils::SqlResponse* response, uint32_t row = 0){
             author::Author* result = NULL;
-            try{
+            try {
                 result = new author::Author();
-                for (int i = offset; i < (response->numCols + offset); i++){
-                    if (strcmp(response->result[0], "id") == 0){
-                        result->id = response->result[i] ? response->result[i] : "null";
-                    }
-                    i++;
-                    if (strcmp(response->result[1], "name") == 0){
-                        result->name = response->result[i] ? response->result[i] : "null";
-                    }
-                    i++;
-                    if (strcmp(response->result[2], "picture") == 0){
-                        result->picture = response->result[i] ? response->result[i] : "null";
-                    }
+                if (result->fieldMap.size() != response->numCols) {} //throw error maybe?
+                uint16_t offset = response->numCols + row;  // First N values are column names
+
+                for (int i = 0; i < offset; i++){
+                    std::string fieldName(response->result[i]);
+                    auto setterMethod = result->fieldMap.at(fieldName);
+                    if (setterMethod){
+                        (result->*setterMethod)(response->result[response->numCols+i] ? response->result[response->numCols+i] : "null");
+                    } else {} //throw exception 
                 }
             } catch (...){
                 //TODO: Handle error
