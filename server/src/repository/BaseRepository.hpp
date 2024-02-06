@@ -6,21 +6,37 @@
 #include "../common/consts/consts.cpp"
 #include <list>
 
-template <typename T> class BaseRepository {
+template <typename T> class BaseRepository {   
     protected:
         DbConnection* connection;
         std::string tableName;
         std::map<const char*, void (T::*)(std::string)> fieldMap;
     public:
-        BaseRepository(){
-            this->connection = new DbConnection(consts::DB_PATH);
-        }
         BaseRepository(std::string tableName){
             this->tableName = tableName;
             this->connection = new DbConnection(consts::DB_PATH);
         }
 
-        virtual T* parseResponse(utils::SqlResponse*, uint32_t row = 0) = 0;
+        T* parseResponse(utils::SqlResponse* response, uint32_t row = 0){
+            T* result = NULL;
+            try {
+                result = new T();
+                if (result->fieldMap.size() != response->numCols) {} //throw error maybe?
+                uint16_t offset = response->numCols + row;  // First N values are column names
+
+                for (int i = 0; i < offset; i++){
+                    std::string fieldName(response->result[i]);
+                    uint32_t fieldPos = response->numCols*(row+1) + i;
+                    auto setterMethod = result->fieldMap.at(fieldName);
+                    if (setterMethod){
+                        (result->*setterMethod)(response->result[fieldPos] ? response->result[fieldPos] : "null");
+                    } else {} //throw exception 
+                }
+            } catch (...){
+                //TODO: Handle error
+            }
+            return result;
+        }
         
         T* findById(std::string id){
             std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");

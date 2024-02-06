@@ -14,16 +14,11 @@ namespace author {
             std::string name;
             std::string picture;
         public:
-            Author(){
-                this->fieldMap.insert(std::make_pair("id", &Author::setId));
-                this->fieldMap.insert(std::make_pair("name", &Author::setName));
-                this->fieldMap.insert(std::make_pair("picture", &Author::setPicture));
-            }
-            std::map<std::string, void (Author::*)(std::string)> fieldMap ;/* = {
-                { "id", this->setId },
-                { "name", this->setName },
-                { "picture", this->setPicture }
-            }; */
+            std::map<std::string, void (Author::*)(std::string)> fieldMap = {
+                { "id", &Author::setId },
+                { "name", &Author::setName },
+                { "picture", &Author::setPicture }
+            };
             NLOHMANN_DEFINE_TYPE_INTRUSIVE(Author, id, name, picture)
 
             void setId(std::string id){
