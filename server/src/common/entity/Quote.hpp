@@ -16,23 +16,13 @@ namespace quote {
             uint32_t creationDate;
             std::string context;
         public:
-
-            std::map<std::string, void (Quote::*)(std::string)> fieldMap = {
-                { "id", &Quote::setId },
-                { "text", &Quote::setText },
-                { "author_id", &Quote::setAuthorId },
-                { "image", &Quote::setImage },
-                { "creation_date", &Quote::setCreationDate },
-                { "context", &Quote::setContext }
-            };
-
+            
             // SETTERS
             void setId(std::string id){ this->id = id; }
             void setText(std::string text){ this->text = text; }
             void setAuthorId(std::string authorId){ this->authorId = authorId; }
             void setImage(std::string image){ this->image = image; }
             void setCreationDate(uint32_t creationDate){ this->creationDate = creationDate; }
-            void setCreationDate(std::string creationDate){ this->creationDate = stoi(creationDate); }
             void setContext(std::string context){ this->context = context; }
             // GETTERS
             std::string getId(){ return this->id; }
