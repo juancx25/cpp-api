@@ -21,6 +21,7 @@ namespace response {
         auto arr = nlohmann::json::array();
         for(auto it = data.begin(); it != data.end(); ++it){
             arr.push_back(**it);
+            free(*it);
         }
         r.write(arr.dump());
         return r;

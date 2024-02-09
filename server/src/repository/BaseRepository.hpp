@@ -6,8 +6,14 @@
 #include "../common/consts/consts.cpp"
 #include <list>
 
-template <typename T> class BaseRepository {   
+template <typename T> class BaseRepository {  
+    protected:
+
+        DbConnection* connection;
+        std::string tableName; 
+        
     private:
+
         T* parseResponse(utils::SqlResponse* response, uint32_t currentRow = 0){
             T* result = NULL;
             try {
@@ -25,30 +31,44 @@ template <typename T> class BaseRepository {
             }
             return result;
         }
-    protected:
-        DbConnection* connection;
-        std::string tableName;
+
     public:
+    
         BaseRepository(std::string tableName){
             this->tableName = tableName;
             this->connection = new DbConnection(consts::DB_PATH);
         }
-
-        virtual void populateField(T* resultObject, std::string fieldName, std::string value) = 0;
-
-        
-        T* findById(std::string id){
-            std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");
-            this->connection->execute(sqlQuery.c_str());
-            return this->parseResponse(this->connection->responseData);
+        ~BaseRepository(){
+            delete this->connection;
         }
 
+        /**
+         * @brief 
+         * 
+         * @param resultObject destination object where field will be populated
+         * @param fieldName field name in database
+         * @param value value to set, as string
+         */
+        virtual void populateField(T* resultObject, std::string fieldName, std::string value) = 0;
+
+        // Standard retrieval methods
+        T* findById(std::string id){
+            std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");
+            utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
+            return this->parseResponse(dbResponse);
+        }
+
+        /**
+         * @brief Get a LIST with all table results. NOT recommmended for long tables.
+         * 
+         * @return std::list<T*> a list with all parsed objects to return.
+         */
         std::list<T*> findAll(){
             std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + ";");
-            this->connection->execute(sqlQuery.c_str());
             std::list<T*> all;
-            for (int i = 0; i<this->connection->responseData->numRows; i++){
-                all.push_back(this->parseResponse(this->connection->responseData, i));
+            utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
+            for (int row = 0; row < dbResponse->numRows; row++){
+                all.push_back(this->parseResponse(dbResponse, row));
             }
             return all;
         }
