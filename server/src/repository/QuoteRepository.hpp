@@ -3,25 +3,27 @@
 
 #include "BaseRepository.hpp"
 #include "../common/entity/Quote.hpp"
+#include "../common/utils/SqlResponse.hpp"
+#include "../common/utils/SqlResponseParse.cpp"
 
 class QuoteRepository: public BaseRepository<quote::Quote> {
     public:
         QuoteRepository(): BaseRepository<quote::Quote>("quote"){}
 
-        void populateField(quote::Quote* resultObject, std::string fieldName, std::string value){
+        void populateField(quote::Quote* resultObject, const char* columnName, const utils::SqlResponseField* field){
 
-            if(strcmp(fieldName.c_str(), "id") == 0){
-                resultObject->setId(value);
-            } else if(strcmp(fieldName.c_str(), "text") == 0){
-                resultObject->setText(value);
-            } else if(strcmp(fieldName.c_str(), "author_id") == 0){
-                resultObject->setAuthorId(value);
-            } else if(strcmp(fieldName.c_str(), "image") == 0){
-                resultObject->setImage(value);
-            } else if(strcmp(fieldName.c_str(), "creation_date") == 0){
-                resultObject->setCreationDate(stoi(value));
-            } else if(strcmp(fieldName.c_str(), "context") == 0){
-                resultObject->setContext(value);
+            if(strcmp(columnName, "id") == 0){
+                resultObject->setId(utils::sqlToString(field));
+            } else if(strcmp(columnName, "text") == 0){
+                resultObject->setText(utils::sqlToString(field));
+            } else if(strcmp(columnName, "author_id") == 0){
+                resultObject->setAuthorId(utils::sqlToString(field));
+            } else if(strcmp(columnName, "image") == 0){
+                resultObject->setImage(utils::sqlToString(field));
+            } else if(strcmp(columnName, "creation_date") == 0){
+                resultObject->setCreationDate(utils::sqlToUint32(field));
+            } else if(strcmp(columnName, "context") == 0){
+                resultObject->setContext(utils::sqlToString(field));
             } else {
                 //Throw error
             }
