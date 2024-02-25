@@ -4,22 +4,33 @@
 #include <stdint.h>
 
 namespace utils{
+
+    struct SqlResponseField {
+        void* content;
+        uint32_t size;
+
+        // Is this needed?
+        int dataType;
+    };
+
     class SqlResponse {
         public:
+            SqlResponse(){
+                this->columnNames = NULL;
+                this->errorMessage = NULL;
+                this->numRows = 0;
+                this->numCols = 0;
+            }
             ~SqlResponse(){
-                if (this->result){
-                    uint32_t responseLength = this->numCols*(this->numRows+1);
-                    for (int i = 0; i < responseLength; i++){
-                        free(this->result[i]);
-                    }
-                    free(result);
-                }
+                free(columnNames);
+                
             }
 
             //TODO: These should be private
-            char** result;
-            int numRows;
-            int numCols;
+            std::vector<SqlResponseField**> result;
+            const char** columnNames;
+            uint32_t numRows;
+            uint16_t numCols;
             char* errorMessage;
     };
 }

@@ -14,20 +14,14 @@ template <typename T> class BaseRepository {
         
     private:
 
-        T* parseResponse(utils::SqlResponse* response, uint32_t currentRow = 0){
-            T* result = NULL;
-            try {
-                result = new T();
-                uint16_t dataOffset = response->numCols; // Data starts here
+        T* parseResponse(utils::SqlResponseField** row, uint16_t numCols, const char** columnNames){
 
-                for (uint32_t currentCol = 0; currentCol < response->numCols; currentCol++){
-                    std::string fieldName(response->result[currentCol]);
-                    uint32_t fieldPos = dataOffset*(currentRow+1) + currentCol;
-                    std::string fieldValue = response->result[fieldPos] ? response->result[fieldPos] : "null";
-                    this->populateField(result, fieldName, fieldValue);
+            T* result = NULL;
+            if (row){
+                result = new T();
+                for (uint32_t i = 0; i < numCols; i++){
+                    this->populateField(result, columnNames[i], row[i]);
                 }
-            } catch (...){
-                //TODO: Handle error
             }
             return result;
         }
@@ -47,15 +41,15 @@ template <typename T> class BaseRepository {
          * 
          * @param resultObject destination object where field will be populated
          * @param fieldName field name in database
-         * @param value value to set, as string
+         * @param value field containing the value to be set
          */
-        virtual void populateField(T* resultObject, std::string fieldName, std::string value) = 0;
+        virtual void populateField(T* resultObject, const char* columnName, const utils::SqlResponseField* field) = 0;
 
         // Standard retrieval methods
         T* findById(std::string id){
             std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");
             utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
-            return this->parseResponse(dbResponse);
+            return this->parseResponse(dbResponse->result.front(), dbResponse->numCols, dbResponse->columnNames);
         }
 
         /**
@@ -68,7 +62,7 @@ template <typename T> class BaseRepository {
             std::list<T*> all;
             utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
             for (int row = 0; row < dbResponse->numRows; row++){
-                all.push_back(this->parseResponse(dbResponse, row));
+                all.push_back(this->parseResponse(dbResponse->result[row], dbResponse->numCols, dbResponse->columnNames));
             }
             return all;
         }
