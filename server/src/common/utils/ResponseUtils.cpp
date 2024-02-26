@@ -6,12 +6,16 @@ namespace response {
     template <class responseObject>
 
     crow::response toJson(responseObject* data){
-        crow::response r;
-        r.add_header("Access-Control-Allow-Origin", "*");
-        r.add_header("Content-Type", "application/json");
-        r.write(nlohmann::json(*data).dump());
-        delete data;
-        return r;
+        if (data){
+            crow::response r;
+            r.add_header("Access-Control-Allow-Origin", "*");
+            r.add_header("Content-Type", "application/json");
+            r.write(nlohmann::json(*data).dump());
+            delete data;
+            return r;
+        } else {
+            return crow::response(404);
+        }
     }
     template <class listResponseObject>
     crow::response listToJson(std::list<listResponseObject*> data){

@@ -21,11 +21,11 @@ int main(){
     });
 
     
-    CROW_ROUTE(app, "/authors/<string>").methods(crow::HTTPMethod::GET)
+    CROW_ROUTE(app, "/author/<string>").methods(crow::HTTPMethod::GET)
     ([&](std::string id){
         return response::toJson(authorService->getAuthorById(id));
     });
-    CROW_ROUTE(app, "/authors").methods(crow::HTTPMethod::GET)
+    CROW_ROUTE(app, "/author").methods(crow::HTTPMethod::GET)
     ([&](){
         return response::listToJson(authorService->getAllAuthors());
     });

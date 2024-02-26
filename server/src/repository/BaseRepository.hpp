@@ -49,7 +49,13 @@ template <typename T> class BaseRepository {
         T* findById(std::string id){
             std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");
             utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
-            return this->parseResponse(dbResponse->result.front(), dbResponse->numCols, dbResponse->columnNames);
+            if (dbResponse->numRows > 0){
+                return this->parseResponse(dbResponse->result.front(), dbResponse->numCols, dbResponse->columnNames);
+            } else {
+                // This means we haven't found anything. Throw exception?
+                return NULL;
+            }
+            
         }
 
         /**
