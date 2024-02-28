@@ -12,6 +12,9 @@ class AuthorService{
         AuthorService(){
             authorRepository = new AuthorRepository();
         }
+        ~AuthorService(){
+            delete authorRepository;
+        }
         
         author::Author* getAuthorById(std::string id){
             return this->authorRepository->findById(id);

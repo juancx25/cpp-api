@@ -4,6 +4,7 @@
 #include "../common/utils/DbConnection.hpp"
 #include "../common/utils/SqlResponse.hpp"
 #include "../common/consts/consts.cpp"
+#include "../common/utils/filter/QueryFilter.hpp"
 #include <list>
 
 template <typename T> class BaseRepository {  
@@ -26,6 +27,17 @@ template <typename T> class BaseRepository {
             return result;
         }
 
+        std::string createQueryString(filter::QueryFilter* fieldFilter){
+
+            std::string query = "SELECT * FROM " + this->tableName;
+            if (fieldFilter){
+                query.append(" WHERE CAST(" + fieldFilter->getColumnName() +" AS text) " +
+                filter::getOperation(fieldFilter->getOperation()) +
+                " '" + fieldFilter->getFilterValue() + "'");
+            }
+            return query.append(";");
+        }
+
     public:
     
         BaseRepository(std::string tableName){
@@ -45,9 +57,9 @@ template <typename T> class BaseRepository {
          */
         virtual void populateField(T* resultObject, const char* columnName, const utils::SqlResponseField* field) = 0;
 
-        // Standard retrieval methods
-        T* findById(std::string id){
-            std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + " WHERE id = '" + id + "';");
+
+        T* findAny(filter::QueryFilter* fieldFilter = NULL){
+            std::string sqlQuery = this->createQueryString(fieldFilter);             
             utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
             if (dbResponse->numRows > 0){
                 return this->parseResponse(dbResponse->result.front(), dbResponse->numCols, dbResponse->columnNames);
@@ -55,22 +67,23 @@ template <typename T> class BaseRepository {
                 // This means we haven't found anything. Throw exception?
                 return NULL;
             }
-            
         }
 
-        /**
-         * @brief Get a LIST with all table results. NOT recommmended for long tables.
-         * 
-         * @return std::list<T*> a list with all parsed objects to return.
-         */
-        std::list<T*> findAll(){
-            std::string sqlQuery = std::string("SELECT * FROM " + this->tableName + ";");
+        std::list<T*> findAll(filter::QueryFilter* fieldFilter = NULL){
+            std::string sqlQuery = this->createQueryString(fieldFilter);
             std::list<T*> all;
             utils::SqlResponse* dbResponse = this->connection->execute(sqlQuery.c_str());
             for (int row = 0; row < dbResponse->numRows; row++){
                 all.push_back(this->parseResponse(dbResponse->result[row], dbResponse->numCols, dbResponse->columnNames));
             }
             return all;
+        }
+
+        // Standard wrappers
+
+        T* findById(std::string id){
+            
+            return this->findAny(new filter::QueryFilter("id", id, filter::ComparisonOperator::EQUAL));
         }
 };
 

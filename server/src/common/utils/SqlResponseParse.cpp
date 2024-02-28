@@ -9,8 +9,8 @@ namespace utils{
         return std::string((const char*)row->content, row->size);
     }
 
-    uint32_t sqlToUint32(const utils::SqlResponseField* row){
-        return *((uint32_t*) row->content);
+    uint64_t sqlToUint64(const utils::SqlResponseField* row){
+        return *((uint64_t*) row->content);
     }
 }
 

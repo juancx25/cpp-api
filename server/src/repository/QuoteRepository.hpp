@@ -21,7 +21,7 @@ class QuoteRepository: public BaseRepository<quote::Quote> {
             } else if(strcmp(columnName, "image") == 0){
                 resultObject->setImage(utils::sqlToString(field));
             } else if(strcmp(columnName, "creation_date") == 0){
-                resultObject->setCreationDate(utils::sqlToUint32(field));
+                resultObject->setCreationDate(utils::sqlToUint64(field));
             } else if(strcmp(columnName, "context") == 0){
                 resultObject->setContext(utils::sqlToString(field));
             } else {
