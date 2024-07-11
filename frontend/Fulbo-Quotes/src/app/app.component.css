@@ -1,0 +1,25 @@
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 60px;
+    background-color: #939878;
+}
+
+.app-body{
+    padding-top: 60px;
+}
+
+.sidebar{
+    height: calc(100vh - 60px);
+    position: fixed;
+    background-color: #424731;
+}
+
+.router-outlet{
+    min-height: calc(100vh - 60px);
+    padding-left: 20%;
+    width: 100% !important;
+    background-color: #1E1E1E;
+}

@@ -24,7 +24,7 @@ class DbConnection {
 
             // Prepare and compile SQL statement
             sqlite3_stmt* preparedStatement;
-            sqlite3_prepare_v2(this->db, sqlQuery, UINT32_MAX, &preparedStatement, NULL);
+            sqlite3_prepare_v3(this->db, sqlQuery, UINT32_MAX, 0, &preparedStatement, NULL);
             dbResponse->numCols = sqlite3_column_count(preparedStatement);
 
             // Get all column names for future reference

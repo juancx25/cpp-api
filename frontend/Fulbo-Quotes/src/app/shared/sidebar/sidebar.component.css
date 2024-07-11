@@ -1,0 +1,9 @@
+.sidebar-item{
+    color: #FFFFFF;
+
+}
+
+.sidebar-item:hover{
+    background-color: #535941;
+    cursor: pointer;
+}

@@ -1,0 +1,13 @@
+.quote-body{
+    display: flex;
+    background-color: #DBDBDB;
+}
+
+.quote-picture{
+    width: 256px;
+    height: 256px;
+}
+
+.quote-text{
+    color: #FFFFFF;
+}

@@ -1,0 +1,28 @@
+<h3 *ngIf="!isLoading && !quote" class="m-5 text-center not-found-title">No se pudo encontrar una frase con ese ID</h3>
+<fulbo-loading-spinner *ngIf="isLoading && !quote" class="text-secondary"></fulbo-loading-spinner>
+
+<main *ngIf="quote">
+    <h4 class="quote-text m-3">"{{quote.text}}"</h4>
+    <div class="d-flex flex-column quote-body m-3">
+        <div class="d-flex">
+            <img class="quote-picture m-3"
+            src="https://www.fundacionkonex.org/custom/web/data/imagenes/repositorio/2010/6/1/218/20160315053236c24cd76e1ce41366a4bbe8a49b02a028.jpg" alt="">
+            
+            <div class="m-3">
+                <h5 *ngIf="quoteAuthor" class="m-3">Autor: {{quoteAuthor.name}}</h5>
+                <h5 *ngIf="quote.creationDate" class="m-3">Fecha: {{quote.creationDate}}</h5>
+                <h5 *ngIf="quote.context" class="m-3">Contexto: {{quote.context}}</h5>
+            </div>
+        </div>
+        
+        <!-- <h4 class="m-3">Frases de {{author.name}}</h4>
+        <ul class="list-group m-3">
+            <li class="list-group-item" *ngFor="let quote of authorQuotes">
+                <div class="d-flex justify-content-between">
+                    <span>"{{quote.text}}"</span>
+                    <a href="/quote/{{quote.id}}">Ver frase</a>
+                </div>
+            </li>
+        </ul> -->
+    </div>
+</main>

@@ -27,13 +27,19 @@ template <typename T> class BaseRepository {
             return result;
         }
 
-        std::string createQueryString(filter::QueryFilter* fieldFilter){
+        std::string createQueryString(filter::QueryFilter* fieldFilter = NULL, uint32_t limit = UINT32_MAX, uint64_t offset = 0){
 
             std::string query = "SELECT * FROM " + this->tableName;
             if (fieldFilter){
                 query.append(" WHERE CAST(" + fieldFilter->getColumnName() +" AS text) " +
                 filter::getOperation(fieldFilter->getOperation()) +
                 " '" + fieldFilter->getFilterValue() + "'");
+            }
+            if (limit != UINT32_MAX){
+                query.append(" LIMIT " + limit);
+            }
+            if (offset != 0){
+                query.append(" OFFSET " + offset);
             }
             return query.append(";");
         }
@@ -42,6 +48,7 @@ template <typename T> class BaseRepository {
     
         BaseRepository(std::string tableName){
             this->tableName = tableName;
+            //Shouldn't we create a connection each time we make a query?
             this->connection = new DbConnection(consts::DB_PATH);
         }
         ~BaseRepository(){

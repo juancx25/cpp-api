@@ -1,0 +1,32 @@
+<h3 *ngIf="!isLoading && !author" class="m-5 text-center not-found-title">No se pudo encontrar un autor con ese ID</h3>
+<fulbo-loading-spinner *ngIf="isLoading && !author" class="text-secondary"></fulbo-loading-spinner>
+
+<main *ngIf="author">
+    <h3 class="m-3 mt-5">Autores → {{author.name}}</h3>
+    <div class="d-flex flex-column author-body m-3">
+        <div class="d-flex">
+            <fulbo-img class="w-25 m-3" [image]="author.picture"></fulbo-img>
+            
+            <div class="m-3 w-75">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel felis in ex commodo lacinia id sed nisl. Nulla quam neque, ullamcorper ac porta ac, scelerisque id metus. Praesent pulvinar, est id vehicula bibendum, neque odio dictum lacus, sed sollicitudin quam erat sit amet sem. Aenean porta, lacus egestas dignissim porta, tellus metus iaculis nisl, eu mattis neque libero posuere metus. Praesent accumsan rhoncus lectus.</p>
+
+                <div class="d-flex justify-content-between">
+                    <div *ngFor="let bioField of biographicDataFields" class="d-flex flex-column">
+                        <h5>{{bioField}}</h5>
+                        <h5>*DATA*</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h4 class="m-3">Frases de {{author.name}}</h4>
+        <ul class="list-group m-3">
+            <li class="list-group-item" *ngFor="let quote of authorQuotes">
+                <div class="d-flex justify-content-between">
+                    <span>"{{quote.text}}"</span>
+                    <a href="/quote/{{quote.id}}">Ver frase</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</main>
