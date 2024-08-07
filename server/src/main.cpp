@@ -1,40 +1,25 @@
 #include <crow.h>
-#include "./common/utils/ResponseUtils.cpp"
-#include "./service/QuoteService.hpp"
-#include "./service/AuthorService.hpp"
-#include "./common/utils/filter/QueryFilter.hpp"
+//#include "./common/utils/filter/QueryFilter.hpp"
+#include "./controller/AuthorController.hpp"
+#include "./controller/QuoteController.hpp"
 
-crow::SimpleApp app;
+crow::SimpleApp application;
 
 int main(){
 
-    QuoteService* quoteService = new QuoteService();
-    AuthorService* authorService = new AuthorService();
+    // Instantiate controllers
+    AuthorController* authorController = new AuthorController(application);
+    QuoteController* quoteController = new QuoteController(application);
 
-    // TODO: Implement controllers
-    CROW_ROUTE(app, "/quote/<string>").methods(crow::HTTPMethod::GET)
-    ([&](std::string id){
-        return response::toJson(quoteService->getQuoteById(id));
-    });
-    CROW_ROUTE(app, "/quotes").methods(crow::HTTPMethod::GET)
-    ([&](const crow::request& req){
-        const char* authorId = req.url_params.get("authorId=");
-        return authorId ? response::listToJson(quoteService->getAllQuotesByAuthorId(std::string(authorId))) : response::listToJson(quoteService->getAllQuotes());
-    });
-    
-    CROW_ROUTE(app, "/author/<string>").methods(crow::HTTPMethod::GET)
-    ([&](std::string id){
-        return response::toJson(authorService->getAuthorById(id));
-    });
-    CROW_ROUTE(app, "/authors").methods(crow::HTTPMethod::GET)
-    ([&](){
-        return response::listToJson(authorService->getAllAuthors());
-    });
+    // Run application with configurations
+    application
+        .port(8090)
+        .multithreaded()
+        .run();
 
-    app.port(8090).multithreaded().run();
-
-    delete quoteService;
-    delete authorService;
+    // Clear memory after quitting
+    delete authorController;
+    delete quoteController;
     
     return 0;
 }

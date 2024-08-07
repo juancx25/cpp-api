@@ -79,6 +79,7 @@
         "variant": "cpp",
         "sqlite3.h": "c",
         "author.hpp": "c",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "span": "cpp"
     }
 }

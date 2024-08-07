@@ -1,0 +1,9 @@
+TO-DO list:
+
+- Externalizar base de datos
+- Implementar tabla externa para imágenes (los .jpg embebidos como BASE64 ocupan demasiado espacio)
+- Filtros compuestos
+- Paginación
+- Sort
+- Logging toggleable
+- Autenticación

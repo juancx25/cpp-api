@@ -8,8 +8,6 @@ namespace utils{
     struct SqlResponseField {
         void* content;
         uint32_t size;
-
-        // Is this needed?
         int dataType;
     };
 
@@ -26,7 +24,6 @@ namespace utils{
                 
             }
 
-            //TODO: These should be private
             std::vector<SqlResponseField**> result;
             const char** columnNames;
             uint32_t numRows;

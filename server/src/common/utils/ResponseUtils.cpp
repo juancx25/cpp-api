@@ -1,3 +1,6 @@
+#ifndef RESPONSE_UTILS
+#define RESPONSE_UTILS
+
 #include <crow.h>
 #include <nlohmann/json.hpp>
 #include <list>
@@ -31,3 +34,5 @@ namespace response {
         return r;
     }
 }
+
+#endif

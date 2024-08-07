@@ -17,12 +17,8 @@ class QuoteService{
             return quoteRepository->findById(id);
         }
 
-        std::list<quote::Quote*> getAllQuotesByAuthorId(std::string authorId){
-            filter::QueryFilter* authorIdFilter = new filter::QueryFilter("author_id", authorId, filter::ComparisonOperator::EQUAL);
+        std::list<quote::Quote*> getAllQuotes(const char* authorId){
+            filter::QueryFilter* authorIdFilter = authorId ? new filter::QueryFilter("author_id", std::string(authorId), filter::ComparisonOperator::EQUAL) : NULL;
             return quoteRepository->findAll(authorIdFilter);
-        }
-
-        std::list<quote::Quote*> getAllQuotes(){
-            return quoteRepository->findAll();
         }
 };

@@ -22,7 +22,7 @@ class AuthorRepository: public BaseRepository<author::Author> {
                 std::cout << resultObject->getName() << std::endl;
             } else if(strcmp(columnName, "picture") == 0){
                 resultObject->setPicture(utils::sqlToString(field));
-                std::cout << resultObject->getPicture() << std::endl;
+                //std::cout << resultObject->getPicture() << std::endl;
             } else {
                 //Throw error
             }

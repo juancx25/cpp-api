@@ -33,7 +33,6 @@ export class QuotePageComponent {
     this.isLoading = true;
     this.quoteService.getQuoteById(quoteId).subscribe(response => {
       if (response.id === quoteId){
-        debugger 
         response.creationDate = new Date(response.creationDate);
         this.quote = response;
         this.getQuoteAuthor(response.authorId);

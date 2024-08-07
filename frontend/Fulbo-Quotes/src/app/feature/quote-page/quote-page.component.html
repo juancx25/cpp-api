@@ -5,8 +5,7 @@
     <h4 class="quote-text m-3">"{{quote.text}}"</h4>
     <div class="d-flex flex-column quote-body m-3">
         <div class="d-flex">
-            <img class="quote-picture m-3"
-            src="https://www.fundacionkonex.org/custom/web/data/imagenes/repositorio/2010/6/1/218/20160315053236c24cd76e1ce41366a4bbe8a49b02a028.jpg" alt="">
+            <fulbo-img class="w-25 m-3" [image]="quote.image"></fulbo-img>
             
             <div class="m-3">
                 <h5 *ngIf="quoteAuthor" class="m-3">Autor: {{quoteAuthor.name}}</h5>
